@@ -1,0 +1,208 @@
+index.html
+<div id="status-console" style="position: fixed; bottom: 10px; right: 10px; background: #333; color: #fff; padding: 10px; border-radius: 5px; font-size: 12px; font-family: monospace; z-index: 999; max-width: 300px; opacity: 0.9;">
+    系統準備中...
+</div>
+
+<script>
+    // 1. 資料庫 (Data Source) - 來自你的 PPT 內容
+    const data = {
+        intro: [
+            {
+                title: "文化工業 (Culture Industry)",
+                content: "由法蘭克福學派學者阿多諾 (Adorno) 和霍克海默 (Horkheimer) 於 1960 年代提出。特點包括：<br>1. 生產過程類似現代大工業。<br>2. 與科學技術緊密結合。<br>3. 大眾成為被動消費者而非主體。",
+                tag: "起源"
+            },
+            {
+                title: "英國創意產業定義 (1997)",
+                content: "由布萊爾 (Blair) 政府提出：「起源於個體創意、技巧及才能，通過知識產權的生成與利用，有潛力創造財富和就業機會的產業。」",
+                tag: "政策"
+            },
+            {
+                title: "台灣文化創意產業定義 (2004)",
+                content: "文建會定義：「源自創意及文化積累，透過智慧財產的形成與運用，具有創造財富與就業機會潛力，並促進整體生活提升的行業。」",
+                tag: "台灣"
+            },
+            {
+                title: "文創產業的經濟特性",
+                content: "根據 Hesmondhalgh：<br>1. 高風險 (High Risk)<br>2. 半公共財<br>3. 生產成本高，再製成本低<br>4. 類型化商品",
+                tag: "特性"
+            }
+        ],
+        types: [
+            {
+                title: "六大旗艦產業 (2009)",
+                content: "行政院選定：工藝、設計、數位內容、電影、電視、流行音樂。",
+                tag: "重點"
+            },
+            {
+                title: "15+1 產業範疇 (文化部主管)",
+                content: "視覺藝術、音樂及表演藝術、文化資產應用、工藝、電影、廣播電視、出版。",
+                tag: "分類"
+            },
+            {
+                title: "15+1 產業範疇 (經濟部主管)",
+                content: "廣告、產品設計、視覺傳達設計、設計品牌時尚、數位內容、創意生活。",
+                tag: "分類"
+            },
+            {
+                title: "15+1 產業範疇 (內政部主管)",
+                content: "建築設計產業。",
+                tag: "分類"
+            }
+        ],
+        theory: [
+            {
+                title: "泰勒 (Tylor) 的文化定義",
+                content: "「文化是人作為社會成員所獲得的複合整體，包括知識、信仰、藝術、道德、法律、風俗等能力和習慣。」",
+                tag: "人類學"
+            },
+            {
+                title: "結構主義 (Structuralism)",
+                content: "代表人物：李維史陀 (Levi-Strauss)。<br>觀點：文化是人類對自然的模擬，透過「二元對立」的關係（如：男/女、生/熟）來賦予意義。",
+                tag: "李維史陀"
+            },
+            {
+                title: "後結構主義 - 羅蘭巴特 (Roland Barthes)",
+                content: "觀點：「作者已死」。文本意義不是由作者決定，而是由讀者（消費者）在閱讀過程中完成的。強調讀者的體驗。",
+                tag: "符號學"
+            },
+            {
+                title: "解構主義 - 德希達 (Derrida)",
+                content: "觀點：反對絕對的「中心」與「權威」。神話與意義是流動的、無中心的。這啟發文創產業要勇於挑戰傳統、打破邊陲與中心的界線。",
+                tag: "解構"
+            }
+        ],
+        dilemma: [
+            {
+                title: "文創發展的兩難",
+                content: "「提升產值」 (經濟利益) vs. 「重視人文」 (文化關懷) 的拉鋸。",
+                tag: "核心問題"
+            },
+            {
+                title: "CSR (企業社會責任) 的角色",
+                content: "作為平衡兩難的解方：<br>1. 好的公司治理<br>2. 對人的責任<br>3. 對環境的責任<br>4. 對社會發展的貢獻",
+                tag: "解決方案"
+            }
+        ]
+    };
+
+    // 2. 核心功能：渲染畫面 (Render Function)
+    function render() {
+        for (const [key, items] of Object.entries(data)) {
+            const container = document.getElementById(key);
+            // 防呆機制：如果找不到對應的區塊，就跳過
+            if (!container) {
+                console.warn(`警告：HTML 中找不到 id 為 ${key} 的區塊`);
+                continue;
+            }
+            
+            // 清空舊內容（避免重複渲染）
+            container.innerHTML = '';
+
+            items.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.onclick = function() {
+                    this.classList.toggle('open');
+                    const ans = this.querySelector('.answer');
+                    // 簡單的切換顯示
+                    ans.style.display = ans.style.display === 'block' ? 'none' : 'block';
+                };
+                
+                card.innerHTML = `
+                    <h3><span><span class="tag">${item.tag}</span>${item.title}</span></h3>
+                    <div class="answer">${item.content}</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+    }
+
+    // 3. 核心功能：切換分頁 (Navigation)
+    window.showSection = function(id) {
+        // 隱藏所有區塊
+        document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.btn').forEach(el => el.classList.remove('active'));
+        
+        // 顯示目標區塊
+        const target = document.getElementById(id);
+        if (target) {
+            target.classList.add('active');
+        } else {
+            console.error(`錯誤：找不到 id 為 ${id} 的分頁`);
+            return; // 中止執行
+        }
+        
+        // 更新按鈕狀態
+        const btnMap = {
+            'intro': 0, 'types': 1, 'theory': 2, 'dilemma': 3
+        };
+        const buttons = document.querySelectorAll('.btn');
+        if (buttons[btnMap[id]]) {
+            buttons[btnMap[id]].classList.add('active');
+        }
+    }
+
+    // ==========================================
+    // 4. 自動化測試系統 (Auto Diagnostic System)
+    // ==========================================
+    function runSystemCheck() {
+        const consoleDiv = document.getElementById('status-console');
+        let logs = [];
+        let errors = 0;
+
+        function log(msg, isError = false) {
+            const icon = isError ? '❌' : '✅';
+            logs.push(`<div>${icon} ${msg}</div>`);
+            if (isError) errors++;
+        }
+
+        // 測試 1: 檢查資料庫是否為空
+        if (typeof data !== 'undefined' && Object.keys(data).length > 0) {
+            log(`資料庫讀取成功 (共 ${Object.keys(data).length} 章節)`);
+        } else {
+            log(`嚴重錯誤：資料庫是空的！`, true);
+        }
+
+        // 測試 2: 檢查 HTML 元素是否存在
+        const requiredIds = ['intro', 'types', 'theory', 'dilemma'];
+        let missingIds = [];
+        requiredIds.forEach(id => {
+            if (!document.getElementById(id)) missingIds.push(id);
+        });
+
+        if (missingIds.length === 0) {
+            log(`HTML 結構完整`);
+        } else {
+            log(`HTML 缺少區塊: ${missingIds.join(', ')}`, true);
+        }
+
+        // 測試 3: 檢查渲染是否成功 (模擬)
+        const introCards = document.querySelectorAll('#intro .card');
+        if (introCards.length > 0) {
+            log(`渲染系統運作正常 (Intro 區塊有 ${introCards.length} 張卡片)`);
+        } else {
+            log(`渲染失敗：Intro 區塊沒有卡片`, true);
+        }
+
+        // 顯示結果
+        if (errors === 0) {
+            consoleDiv.style.background = '#27ae60'; // 綠色
+            consoleDiv.innerHTML = `<strong>系統正常運行中</strong><br>` + logs.join('');
+            // 3秒後自動隱藏成功訊息，以免擋路
+            setTimeout(() => {
+                consoleDiv.style.display = 'none';
+            }, 3000);
+        } else {
+            consoleDiv.style.background = '#c0392b'; // 紅色
+            consoleDiv.innerHTML = `<strong>系統偵測到錯誤</strong><br>` + logs.join('');
+        }
+    }
+
+    // 初始化程式
+    render();
+    
+    // 執行測試
+    runSystemCheck();
+
+</script>
