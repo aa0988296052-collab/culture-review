@@ -1,10 +1,171 @@
 
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文創產業理論與實務 - 複習筆記</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #e67e22;
+            --bg: #f5f6fa;
+            --card-bg: #ffffff;
+            --text: #2f3542;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, 'PingFang TC', 'Heiti TC', 'Microsoft JhengHei', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+
+        /* 選單按鈕 */
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            background: #dfe4ea;
+            color: var(--text);
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn.active, .btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* 內容區塊 */
+        .section {
+            display: none; /* 預設隱藏 */
+            animation: fadeIn 0.5s;
+        }
+
+        .section.active {
+            display: block; /* 啟用時顯示 */
+        }
+
+        /* 卡片設計 */
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: transform 0.2s;
+            border-left: 5px solid var(--accent);
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 12px rgba(0,0,0,0.1);
+        }
+
+        .card h3 {
+            margin: 0 0 10px 0;
+            color: var(--primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card h3::after {
+            content: '+';
+            font-size: 1.2em;
+            color: #ccc;
+        }
+
+        .card.open h3::after {
+            content: '-';
+        }
+
+        .answer {
+            display: none;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            color: #57606f;
+        }
+
+        .tag {
+            display: inline-block;
+            background: #eccc68;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>文創產業理論與實務</h1>
+        <p class="subtitle">Chapter 1 重點複習 | 點擊卡片查看詳解</p>
+    </header>
+
+    <div class="nav-buttons">
+        <button class="btn active" onclick="showSection('intro')">產業定義與興起</button>
+        <button class="btn" onclick="showSection('types')">台灣產業範疇</button>
+        <button class="btn" onclick="showSection('theory')">文化理論學派</button>
+        <button class="btn" onclick="showSection('dilemma')">發展困境與反思</button>
+    </div>
+
+    <div id="intro" class="section active"></div>
+    <div id="types" class="section"></div>
+    <div id="theory" class="section"></div>
+    <div id="dilemma" class="section"></div>
+</div>
+
 <div id="status-console" style="position: fixed; bottom: 10px; right: 10px; background: #333; color: #fff; padding: 10px; border-radius: 5px; font-size: 12px; font-family: monospace; z-index: 999; max-width: 300px; opacity: 0.9;">
     系統準備中...
 </div>
 
 <script>
-    // 1. 資料庫 (Data Source) - 來自你的 PPT 內容
+    // ==========================================
+    // 1. 資料庫 (PPT 內容)
+    // ==========================================
     const data = {
         intro: [
             {
@@ -86,26 +247,21 @@
         ]
     };
 
-    // 2. 核心功能：渲染畫面 (Render Function)
+    // ==========================================
+    // 2. 核心功能
+    // ==========================================
     function render() {
         for (const [key, items] of Object.entries(data)) {
             const container = document.getElementById(key);
-            // 防呆機制：如果找不到對應的區塊，就跳過
-            if (!container) {
-                console.warn(`警告：HTML 中找不到 id 為 ${key} 的區塊`);
-                continue;
-            }
+            if (!container) continue;
             
-            // 清空舊內容（避免重複渲染）
             container.innerHTML = '';
-
             items.forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.onclick = function() {
                     this.classList.toggle('open');
                     const ans = this.querySelector('.answer');
-                    // 簡單的切換顯示
                     ans.style.display = ans.style.display === 'block' ? 'none' : 'block';
                 };
                 
@@ -118,33 +274,20 @@
         }
     }
 
-    // 3. 核心功能：切換分頁 (Navigation)
     window.showSection = function(id) {
-        // 隱藏所有區塊
         document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.btn').forEach(el => el.classList.remove('active'));
         
-        // 顯示目標區塊
         const target = document.getElementById(id);
-        if (target) {
-            target.classList.add('active');
-        } else {
-            console.error(`錯誤：找不到 id 為 ${id} 的分頁`);
-            return; // 中止執行
-        }
+        if(target) target.classList.add('active');
         
-        // 更新按鈕狀態
-        const btnMap = {
-            'intro': 0, 'types': 1, 'theory': 2, 'dilemma': 3
-        };
+        const btnMap = { 'intro': 0, 'types': 1, 'theory': 2, 'dilemma': 3 };
         const buttons = document.querySelectorAll('.btn');
-        if (buttons[btnMap[id]]) {
-            buttons[btnMap[id]].classList.add('active');
-        }
+        if (buttons[btnMap[id]]) buttons[btnMap[id]].classList.add('active');
     }
 
     // ==========================================
-    // 4. 自動化測試系統 (Auto Diagnostic System)
+    // 3. 自動化測試系統
     // ==========================================
     function runSystemCheck() {
         const consoleDiv = document.getElementById('status-console');
@@ -157,53 +300,40 @@
             if (isError) errors++;
         }
 
-        // 測試 1: 檢查資料庫是否為空
         if (typeof data !== 'undefined' && Object.keys(data).length > 0) {
-            log(`資料庫讀取成功 (共 ${Object.keys(data).length} 章節)`);
+            log(`資料庫讀取成功`);
         } else {
-            log(`嚴重錯誤：資料庫是空的！`, true);
+            log(`資料庫錯誤`, true);
         }
 
-        // 測試 2: 檢查 HTML 元素是否存在
         const requiredIds = ['intro', 'types', 'theory', 'dilemma'];
         let missingIds = [];
         requiredIds.forEach(id => {
             if (!document.getElementById(id)) missingIds.push(id);
         });
 
-        if (missingIds.length === 0) {
-            log(`HTML 結構完整`);
-        } else {
-            log(`HTML 缺少區塊: ${missingIds.join(', ')}`, true);
-        }
+        if (missingIds.length === 0) log(`HTML 結構完整`);
+        else log(`HTML 缺少區塊`, true);
 
-        // 測試 3: 檢查渲染是否成功 (模擬)
-        const introCards = document.querySelectorAll('#intro .card');
-        if (introCards.length > 0) {
-            log(`渲染系統運作正常 (Intro 區塊有 ${introCards.length} 張卡片)`);
-        } else {
-            log(`渲染失敗：Intro 區塊沒有卡片`, true);
-        }
+        // 檢查 CSS 變數是否生效 (檢查顏色)
+        const testColor = getComputedStyle(document.documentElement).getPropertyValue('--primary');
+        if (testColor && testColor.trim() !== '') log(`樣式系統正常 (有顏色)`);
+        else log(`樣式系統異常 (沒有顏色)`, true);
 
-        // 顯示結果
         if (errors === 0) {
-            consoleDiv.style.background = '#27ae60'; // 綠色
+            consoleDiv.style.background = '#27ae60';
             consoleDiv.innerHTML = `<strong>系統正常運行中</strong><br>` + logs.join('');
-            // 3秒後自動隱藏成功訊息，以免擋路
-            setTimeout(() => {
-                consoleDiv.style.display = 'none';
-            }, 3000);
+            setTimeout(() => { consoleDiv.style.display = 'none'; }, 3000);
         } else {
-            consoleDiv.style.background = '#c0392b'; // 紅色
-            consoleDiv.innerHTML = `<strong>系統偵測到錯誤</strong><br>` + logs.join('');
+            consoleDiv.style.background = '#c0392b';
+            consoleDiv.innerHTML = `<strong>偵測到錯誤</strong><br>` + logs.join('');
         }
     }
 
-    // 初始化程式
+    // 啟動
     render();
-    
-    // 執行測試
     runSystemCheck();
-
 </script>
 
+</body>
+</html>
